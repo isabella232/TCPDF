@@ -763,7 +763,7 @@ class QRcode {
 			if (QR_FIND_BEST_MASK) {
 				$masked = $this->mask($this->width, $this->frame, $this->level);
 			} else {
-				$masked = $this->makeMask($this->width, $this->frame, (intval(QR_DEFAULT_MASK) % 8), $this->level);
+				$masked = $this->makeMask($this->width, $this->frame, ((int)QR_DEFAULT_MASK % 8), $this->level);
 			}
 		} else {
 			$masked = $this->makeMask($this->width, $this->frame, $mask, $this->level);
@@ -1225,7 +1225,7 @@ class QRcode {
 		if (QR_FIND_FROM_RANDOM !== false) {
 			$howManuOut = 8 - (QR_FIND_FROM_RANDOM % 9);
 			for ($i = 0; $i <  $howManuOut; ++$i) {
-				$remPos = rand (0, count($checked_masks)-1);
+				$remPos = \random_int(0, count($checked_masks)-1);
 				unset($checked_masks[$remPos]);
 				$checked_masks = array_values($checked_masks);
 			}

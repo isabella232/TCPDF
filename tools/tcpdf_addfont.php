@@ -41,12 +41,12 @@
  * @version 1.0.000
  */
 
-if (php_sapi_name() != 'cli') {
+if (\PHP_SAPI !== 'cli') {
   echo 'You need to run this command from console.';
   exit(1);
 }
 
-$tcpdf_include_dirs = array(realpath(dirname(__FILE__).'/../tcpdf.php'), '/usr/share/php/tcpdf/tcpdf.php', '/usr/share/tcpdf/tcpdf.php', '/usr/share/php-tcpdf/tcpdf.php', '/var/www/tcpdf/tcpdf.php', '/var/www/html/tcpdf/tcpdf.php', '/usr/local/apache2/htdocs/tcpdf/tcpdf.php');
+$tcpdf_include_dirs = array(realpath(__DIR__ .'/../tcpdf.php'), '/usr/share/php/tcpdf/tcpdf.php', '/usr/share/tcpdf/tcpdf.php', '/usr/share/php-tcpdf/tcpdf.php', '/var/www/tcpdf/tcpdf.php', '/var/www/html/tcpdf/tcpdf.php', '/usr/local/apache2/htdocs/tcpdf/tcpdf.php');
 foreach ($tcpdf_include_dirs as $tcpdf_include_path) {
 	if (@file_exists($tcpdf_include_path)) {
 		require_once($tcpdf_include_path);
@@ -182,7 +182,7 @@ foreach ($inopt as $opt => $val) {
 		}
 		case 'f':
 		case 'flags': {
-			$options['flags'] = intval($val);
+			$options['flags'] = (int)$val;
 			break;
 		}
 		case 'o':
@@ -195,12 +195,12 @@ foreach ($inopt as $opt => $val) {
 		}
 		case 'p':
 		case 'platid': {
-			$options['platid'] = min(max(1, intval($val)), 3);
+			$options['platid'] = min(max(1, (int)$val), 3);
 			break;
 		}
 		case 'n':
 		case 'encid': {
-			$options['encid'] = min(max(0, intval($val)), 10);
+			$options['encid'] = min(max(0, (int)$val), 10);
 			break;
 		}
 		case 'b':

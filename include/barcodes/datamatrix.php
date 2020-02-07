@@ -629,7 +629,7 @@ class Datamatrix {
 					if ($numch[ENC_C40] == $numch[ENC_X12]) {
 						$k = ($pos + $charscount + 1);
 						while ($k < $data_length) {
-							$tmpchr = ord($data{$k});
+							$tmpchr = ord($data[$k]);
 							if ($this->isCharMode($tmpchr, ENC_X12)) {
 								return ENC_X12;
 							} elseif (!($this->isCharMode($tmpchr, ENC_X12) OR $this->isCharMode($tmpchr, ENC_C40))) {
@@ -718,7 +718,7 @@ class Datamatrix {
 				case ENC_ASCII: { // STEP B. While in ASCII encodation
 					if (($data_length > 1) AND ($pos < ($data_length - 1)) AND ($this->isCharMode(ord($data[$pos]), ENC_ASCII_NUM) AND $this->isCharMode(ord($data[$pos + 1]), ENC_ASCII_NUM))) {
 						// 1. If the next data sequence is at least 2 consecutive digits, encode the next two digits as a double digit in ASCII mode.
-						$cw[] = (intval(substr($data, $pos, 2)) + 130);
+						$cw[] = ((int)substr($data, $pos, 2) + 130);
 						++$cw_num;
 						$pos += 2;
 					} else {

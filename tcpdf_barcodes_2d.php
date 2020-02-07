@@ -254,29 +254,29 @@ class TCPDF2DBarcode {
 		$qrtype = strtoupper($mode[0]);
 		switch ($qrtype) {
 			case 'DATAMATRIX': { // DATAMATRIX (ISO/IEC 16022)
-				require_once(dirname(__FILE__).'/include/barcodes/datamatrix.php');
+				require_once(__DIR__ .'/include/barcodes/datamatrix.php');
 				$qrcode = new Datamatrix($code);
 				$this->barcode_array = $qrcode->getBarcodeArray();
 				$this->barcode_array['code'] = $code;
 				break;
 			}
 			case 'PDF417': { // PDF417 (ISO/IEC 15438:2006)
-				require_once(dirname(__FILE__).'/include/barcodes/pdf417.php');
+				require_once(__DIR__ .'/include/barcodes/pdf417.php');
 				if (!isset($mode[1]) OR ($mode[1] === '')) {
 					$aspectratio = 2; // default aspect ratio (width / height)
 				} else {
-					$aspectratio = floatval($mode[1]);
+					$aspectratio = (float)$mode[1];
 				}
 				if (!isset($mode[2]) OR ($mode[2] === '')) {
 					$ecl = -1; // default error correction level (auto)
 				} else {
-					$ecl = intval($mode[2]);
+					$ecl = (int)$mode[2];
 				}
 				// set macro block
 				$macro = array();
 				if (isset($mode[3]) AND ($mode[3] !== '') AND isset($mode[4]) AND ($mode[4] !== '') AND isset($mode[5]) AND ($mode[5] !== '')) {
-					$macro['segment_total'] = intval($mode[3]);
-					$macro['segment_index'] = intval($mode[4]);
+					$macro['segment_total'] = (int)$mode[3];
+					$macro['segment_index'] = (int)$mode[4];
 					$macro['file_id'] = strtr($mode[5], "\xff", ',');
 					for ($i = 0; $i < 7; ++$i) {
 						$o = $i + 6;
@@ -292,7 +292,7 @@ class TCPDF2DBarcode {
 				break;
 			}
 			case 'QRCODE': { // QR-CODE
-				require_once(dirname(__FILE__).'/include/barcodes/qrcode.php');
+				require_once(__DIR__ .'/include/barcodes/qrcode.php');
 				if (!isset($mode[1]) OR (!in_array($mode[1],array('L','M','Q','H')))) {
 					$mode[1] = 'L'; // Ddefault: Low error correction
 				}

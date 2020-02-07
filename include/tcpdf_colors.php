@@ -280,22 +280,22 @@ class TCPDF_COLORS {
 				switch ($m[1]) {
 					case 'cmyk': {
 						// RGB
-						$returncolor['C'] = max(0, min(100, (floatval($m[2]) * 100)));
-						$returncolor['M'] = max(0, min(100, (floatval($m[3]) * 100)));
-						$returncolor['Y'] = max(0, min(100, (floatval($m[4]) * 100)));
-						$returncolor['K'] = max(0, min(100, (floatval($m[5]) * 100)));
+						$returncolor['C'] = max(0, min(100, ((float)$m[2] * 100)));
+						$returncolor['M'] = max(0, min(100, ((float)$m[3] * 100)));
+						$returncolor['Y'] = max(0, min(100, ((float)$m[4] * 100)));
+						$returncolor['K'] = max(0, min(100, ((float)$m[5] * 100)));
 						break;
 					}
 					case 'rgb': {
 						// RGB
-						$returncolor['R'] = max(0, min(255, (floatval($m[2]) * 255)));
-						$returncolor['G'] = max(0, min(255, (floatval($m[3]) * 255)));
-						$returncolor['B'] = max(0, min(255, (floatval($m[4]) * 255)));
+						$returncolor['R'] = max(0, min(255, ((float)$m[2] * 255)));
+						$returncolor['G'] = max(0, min(255, ((float)$m[3] * 255)));
+						$returncolor['B'] = max(0, min(255, ((float)$m[4] * 255)));
 						break;
 					}
 					case 'g': {
 						// grayscale
-						$returncolor['G'] = max(0, min(255, (floatval($m[2]) * 255)));
+						$returncolor['G'] = max(0, min(255, ((float)$m[2] * 255)));
 						break;
 					}
 					case 't':
@@ -325,9 +325,9 @@ class TCPDF_COLORS {
 			foreach ($returncolor as $key => $val) {
 				if (strpos($val, '%') > 0) {
 					// percentage
-					$returncolor[$key] = (255 * intval($val) / 100);
+					$returncolor[$key] = (255 * (int)$val / 100);
 				} else {
-					$returncolor[$key] = intval($val);
+					$returncolor[$key] = (int)$val;
 				}
 				// normalize value
 				$returncolor[$key] = max(0, min(255, $returncolor[$key]));
@@ -342,9 +342,9 @@ class TCPDF_COLORS {
 			foreach ($returncolor as $key => $val) {
 				if (strpos($val, '%') !== false) {
 					// percentage
-					$returncolor[$key] = (100 * intval($val) / 100);
+					$returncolor[$key] = (100 * (int)$val / 100);
 				} else {
-					$returncolor[$key] = intval($val);
+					$returncolor[$key] = (int)$val;
 				}
 				// normalize value
 				$returncolor[$key] = max(0, min(100, $returncolor[$key]));
@@ -418,17 +418,17 @@ class TCPDF_COLORS {
 		switch (count($c)) {
 			case 4: {
 				// CMYK
-				$color .= sprintf('%F %F %F %F', (max(0, min(100, floatval($c[0]))) / 100), (max(0, min(100, floatval($c[1]))) / 100), (max(0, min(100, floatval($c[2]))) / 100), (max(0, min(100, floatval($c[3]))) / 100));
+				$color .= sprintf('%F %F %F %F', (max(0, min(100, (float)$c[0])) / 100), (max(0, min(100, (float)$c[1])) / 100), (max(0, min(100, (float)$c[2])) / 100), (max(0, min(100, (float)$c[3])) / 100));
 				break;
 			}
 			case 3: {
 				// RGB
-				$color .= sprintf('%F %F %F', (max(0, min(255, floatval($c[0]))) / 255), (max(0, min(255, floatval($c[1]))) / 255), (max(0, min(255, floatval($c[2]))) / 255));
+				$color .= sprintf('%F %F %F', (max(0, min(255, (float)$c[0])) / 255), (max(0, min(255, (float)$c[1])) / 255), (max(0, min(255, (float)$c[2])) / 255));
 				break;
 			}
 			case 1: {
 				// grayscale
-				$color .= sprintf('%F', (max(0, min(255, floatval($c[0]))) / 255));
+				$color .= sprintf('%F', (max(0, min(255, (float)$c[0])) / 255));
 				break;
 			}
 		}

@@ -41,7 +41,7 @@
  */
 
 // include class for decoding filters
-require_once(dirname(__FILE__).'/include/tcpdf_filters.php');
+require_once(__DIR__ .'/include/tcpdf_filters.php');
 
 /**
  * @class TCPDF_PARSER
@@ -223,18 +223,18 @@ class TCPDF_PARSER {
 			$offset += strlen($matches[0][0]);
 			if ($matches[3][0] == 'n') {
 				// create unique object index: [object number]_[generation number]
-				$index = $obj_num.'_'.intval($matches[2][0]);
+				$index = $obj_num.'_'. (int)$matches[2][0];
 				// check if object already exist
 				if (!isset($xref['xref'][$index])) {
 					// store object offset position
-					$xref['xref'][$index] = intval($matches[1][0]);
+					$xref['xref'][$index] = (int)$matches[1][0];
 				}
 				++$obj_num;
 			} elseif ($matches[3][0] == 'f') {
 				++$obj_num;
 			} else {
 				// object number (index)
-				$obj_num = intval($matches[1][0]);
+				$obj_num = (int)$matches[1][0];
 			}
 		}
 		// get trailer data
@@ -245,16 +245,16 @@ class TCPDF_PARSER {
 				$xref['trailer'] = array();
 				// parse trailer_data
 				if (preg_match('/Size[\s]+([0-9]+)/i', $trailer_data, $matches) > 0) {
-					$xref['trailer']['size'] = intval($matches[1]);
+					$xref['trailer']['size'] = (int)$matches[1];
 				}
 				if (preg_match('/Root[\s]+([0-9]+)[\s]+([0-9]+)[\s]+R/i', $trailer_data, $matches) > 0) {
-					$xref['trailer']['root'] = intval($matches[1]).'_'.intval($matches[2]);
+					$xref['trailer']['root'] = (int)$matches[1] .'_'. (int)$matches[2];
 				}
 				if (preg_match('/Encrypt[\s]+([0-9]+)[\s]+([0-9]+)[\s]+R/i', $trailer_data, $matches) > 0) {
-					$xref['trailer']['encrypt'] = intval($matches[1]).'_'.intval($matches[2]);
+					$xref['trailer']['encrypt'] = (int)$matches[1] .'_'. (int)$matches[2];
 				}
 				if (preg_match('/Info[\s]+([0-9]+)[\s]+([0-9]+)[\s]+R/i', $trailer_data, $matches) > 0) {
-					$xref['trailer']['info'] = intval($matches[1]).'_'.intval($matches[2]);
+					$xref['trailer']['info'] = (int)$matches[1] .'_'. (int)$matches[2];
 				}
 				if (preg_match('/ID[\s]*[\[][\s]*[<]([^>]*)[>][\s]*[<]([^>]*)[>]/i', $trailer_data, $matches) > 0) {
 					$xref['trailer']['id'] = array();
@@ -264,7 +264,7 @@ class TCPDF_PARSER {
 			}
 			if (preg_match('/Prev[\s]+([0-9]+)/i', $trailer_data, $matches) > 0) {
 				// get previous xref
-				$xref = $this->getXrefData(intval($matches[1]), $xref);
+				$xref = $this->getXrefData((int)$matches[1], $xref);
 			}
 		} else {
 			$this->Error('Unable to find trailer');
@@ -305,25 +305,25 @@ class TCPDF_PARSER {
 				$valid_crs = true;
 			} elseif (($v[0] == '/') AND ($v[1] == 'Index') AND (isset($sarr[($k +1)]))) {
 				// first object number in the subsection
-				$index_first = intval($sarr[($k +1)][1][0][1]);
+				$index_first = (int)$sarr[($k + 1)][1][0][1];
 				// number of entries in the subsection
-				$index_entries = intval($sarr[($k +1)][1][1][1]);
+				$index_entries = (int)$sarr[($k + 1)][1][1][1];
 			} elseif (($v[0] == '/') AND ($v[1] == 'Prev') AND (isset($sarr[($k +1)]) AND ($sarr[($k +1)][0] == 'numeric'))) {
 				// get previous xref offset
-				$prevxref = intval($sarr[($k +1)][1]);
+				$prevxref = (int)$sarr[($k + 1)][1];
 			} elseif (($v[0] == '/') AND ($v[1] == 'W') AND (isset($sarr[($k +1)]))) {
 				// number of bytes (in the decoded stream) of the corresponding field
 				$wb = array();
-				$wb[0] = intval($sarr[($k +1)][1][0][1]);
-				$wb[1] = intval($sarr[($k +1)][1][1][1]);
-				$wb[2] = intval($sarr[($k +1)][1][2][1]);
+				$wb[0] = (int)$sarr[($k + 1)][1][0][1];
+				$wb[1] = (int)$sarr[($k + 1)][1][1][1];
+				$wb[2] = (int)$sarr[($k + 1)][1][2][1];
 			} elseif (($v[0] == '/') AND ($v[1] == 'DecodeParms') AND (isset($sarr[($k +1)][1]))) {
 				$decpar = $sarr[($k +1)][1];
 				foreach ($decpar as $kdc => $vdc) {
 					if (($vdc[0] == '/') AND ($vdc[1] == 'Columns') AND (isset($decpar[($kdc +1)]) AND ($decpar[($kdc +1)][0] == 'numeric'))) {
-						$columns = intval($decpar[($kdc +1)][1]);
+						$columns = (int)$decpar[($kdc + 1)][1];
 					} elseif (($vdc[0] == '/') AND ($vdc[1] == 'Predictor') AND (isset($decpar[($kdc +1)]) AND ($decpar[($kdc +1)][0] == 'numeric'))) {
-						$predictor = intval($decpar[($kdc +1)][1]);
+						$predictor = (int)$decpar[($kdc + 1)][1];
 					}
 				}
 			} elseif ($filltrailer) {
@@ -531,10 +531,10 @@ class TCPDF_PARSER {
 				if ($char == '(') {
 					$open_bracket = 1;
 					while ($open_bracket > 0) {
-						if (!isset($this->pdfdata{$strpos})) {
+						if (!isset($this->pdfdata[$strpos])) {
 							break;
 						}
-						$ch = $this->pdfdata{$strpos};
+						$ch = $this->pdfdata[$strpos];
 						switch ($ch) {
 							case '\\': { // REVERSE SOLIDUS (5Ch) (Backslash)
 								// skip next character
@@ -578,7 +578,7 @@ class TCPDF_PARSER {
 			}
 			case '<':   // \x3C LESS-THAN SIGN
 			case '>': { // \x3E GREATER-THAN SIGN
-				if (isset($this->pdfdata{($offset + 1)}) AND ($this->pdfdata{($offset + 1)} == $char)) {
+				if (isset($this->pdfdata[($offset + 1)]) AND ($this->pdfdata[($offset + 1)] == $char)) {
 					// dictionary object
 					$objtype = $char.$char;
 					$offset += 2;
@@ -647,11 +647,11 @@ class TCPDF_PARSER {
 					// indirect object reference
 					$objtype = 'objref';
 					$offset += strlen($matches[0]);
-					$objval = intval($matches[1]).'_'.intval($matches[2]);
+					$objval = (int)$matches[1] .'_'. (int)$matches[2];
 				} elseif (preg_match('/^([0-9]+)[\s]+([0-9]+)[\s]+obj/iU', substr($this->pdfdata, $offset, 33), $matches) == 1) {
 					// object start
 					$objtype = 'obj';
-					$objval = intval($matches[1]).'_'.intval($matches[2]);
+					$objval = (int)$matches[1] .'_'. (int)$matches[2];
 					$offset += strlen ($matches[0]);
 				} elseif (($numlen = strspn($this->pdfdata, '+-.0123456789', $offset)) > 0) {
 					// numeric object
@@ -751,7 +751,7 @@ class TCPDF_PARSER {
 			if ($v[0] == '/') {
 				if (($v[1] == 'Length') AND (isset($sdic[($k + 1)])) AND ($sdic[($k + 1)][0] == 'numeric')) {
 					// get declared stream length
-					$declength = intval($sdic[($k + 1)][1]);
+					$declength = (int)$sdic[($k + 1)][1];
 					if ($declength < $slength) {
 						$stream = substr($stream, 0, $declength);
 						$slength = $declength;

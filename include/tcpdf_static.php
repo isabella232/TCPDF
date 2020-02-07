@@ -139,9 +139,6 @@ class TCPDF_STATIC {
 			$version = PHP_VERSION;
 			define('PHP_VERSION_ID', (($version[0] * 10000) + ($version[2] * 100) + $version[4]));
 		}
-		if (PHP_VERSION_ID < 50300) {
-			@set_magic_quotes_runtime($mqr);
-		}
 	}
 
 	/**
@@ -154,9 +151,6 @@ class TCPDF_STATIC {
 		if (!defined('PHP_VERSION_ID')) {
 			$version = PHP_VERSION;
 			define('PHP_VERSION_ID', (($version[0] * 10000) + ($version[2] * 100) + $version[4]));
-		}
-		if (PHP_VERSION_ID < 50300) {
-			return @get_magic_quotes_runtime();
 		}
 		return 0;
 	}
@@ -393,7 +387,7 @@ class TCPDF_STATIC {
 	 * @public static
 	 */
 	public static function getFormattedDate($time) {
-		return substr_replace(date('YmdHisO', intval($time)), '\'', (0 - 2), 0).'\'';
+		return substr_replace(date('YmdHisO', (int)$time), '\'', (0 - 2), 0).'\'';
 	}
 
 	/**
@@ -405,7 +399,7 @@ class TCPDF_STATIC {
 	 * @public static
 	 */
 	public static function getRandomSeed($seed='') {
-		$rnd = uniqid(rand().microtime(true), true);
+		$rnd = uniqid(random_int().microtime(true), true);
 		if (function_exists('posix_getpid')) {
 			$rnd .= posix_getpid();
 		}
@@ -679,7 +673,7 @@ class TCPDF_STATIC {
 		}
 		// lineWidth: Specifies the thickness of the border when stroking the perimeter of a field's rectangle.
 		if (isset($prop['lineWidth'])) {
-			$linewidth = intval($prop['lineWidth']);
+			$linewidth = (int)$prop['lineWidth'];
 		} else {
 			$linewidth = 1;
 		}
@@ -839,7 +833,7 @@ class TCPDF_STATIC {
 		}
 		// charLimit: Limits the number of characters that a user can type into a text field.
 		if (isset($prop['charLimit'])) {
-			$opt['maxlen'] = intval($prop['charLimit']);
+			$opt['maxlen'] = (int)$prop['charLimit'];
 		}
 		if (!isset($ff)) {
 			$ff = 0; // default value
@@ -1108,11 +1102,11 @@ class TCPDF_STATIC {
 			// calculate selector's specificity
 			$matches = array();
 			$a = 0; // the declaration is not from is a 'style' attribute
-			$b = intval(preg_match_all('/[\#]/', $selector, $matches)); // number of ID attributes
-			$c = intval(preg_match_all('/[\[\.]/', $selector, $matches)); // number of other attributes
-			$c += intval(preg_match_all('/[\:]link|visited|hover|active|focus|target|lang|enabled|disabled|checked|indeterminate|root|nth|first|last|only|empty|contains|not/i', $selector, $matches)); // number of pseudo-classes
-			$d = intval(preg_match_all('/[\>\+\~\s]{1}[a-zA-Z0-9]+/', ' '.$selector, $matches)); // number of element names
-			$d += intval(preg_match_all('/[\:][\:]/', $selector, $matches)); // number of pseudo-elements
+			$b = (int)preg_match_all('/[\#]/', $selector, $matches); // number of ID attributes
+			$c = (int)preg_match_all('/[\[\.]/', $selector, $matches); // number of other attributes
+			$c += (int)preg_match_all('/[\:]link|visited|hover|active|focus|target|lang|enabled|disabled|checked|indeterminate|root|nth|first|last|only|empty|contains|not/i', $selector, $matches); // number of pseudo-classes
+			$d = (int)preg_match_all('/[\>\+\~\s]{1}[a-zA-Z0-9]+/', ' ' . $selector, $matches); // number of element names
+			$d += (int)preg_match_all('/[\:][\:]/', $selector, $matches); // number of pseudo-elements
 			$specificity = $a.$b.$c.$d;
 			// add specificity to the beginning of the selector
 			$cssdata[$specificity.' '.$selector] = $block[1];
@@ -1832,7 +1826,7 @@ class TCPDF_STATIC {
 		curl_setopt($crs, CURLOPT_URL, $url);
 		curl_setopt($crs, CURLOPT_NOBODY, true);
 		curl_setopt($crs, CURLOPT_FAILONERROR, true);
-		if ((ini_get('open_basedir') == '') && (!ini_get('safe_mode'))) {
+		if (ini_get('open_basedir') == '') {
 			curl_setopt($crs, CURLOPT_FOLLOWLOCATION, true);
 		}
 		curl_setopt($crs, CURLOPT_CONNECTTIMEOUT, 5);
@@ -1943,7 +1937,7 @@ class TCPDF_STATIC {
 				curl_setopt($crs, CURLOPT_BINARYTRANSFER, true);
 				curl_setopt($crs, CURLOPT_FAILONERROR, true);
 				curl_setopt($crs, CURLOPT_RETURNTRANSFER, true);
-				if ((ini_get('open_basedir') == '') && (!ini_get('safe_mode'))) {
+				if (ini_get('open_basedir') == '') {
 				    curl_setopt($crs, CURLOPT_FOLLOWLOCATION, true);
 				}
 				curl_setopt($crs, CURLOPT_CONNECTTIMEOUT, 5);
@@ -2048,7 +2042,7 @@ class TCPDF_STATIC {
 		$m = self::_getFWORD($str, $offset);
 		// fraction
 		$f = self::_getUSHORT($str, ($offset + 2));
-		$v = floatval(''.$m.'.'.$f.'');
+		$v = (float)('' . $m . '.' . $f . '');
 		return $v;
 	}
 

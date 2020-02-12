@@ -399,7 +399,7 @@ class TCPDF_STATIC {
 	 * @public static
 	 */
 	public static function getRandomSeed($seed='') {
-		$rnd = uniqid(random_int().microtime(true), true);
+		$rnd = uniqid(\random_int(0, \PHP_INT_MAX).microtime(true), true);
 		if (function_exists('posix_getpid')) {
 			$rnd .= posix_getpid();
 		}

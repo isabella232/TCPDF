@@ -1124,9 +1124,9 @@ class TCPDFBarcode {
 					return false;
 				}
 				for ($i = 0; $i < $len; $i+=2) {
-					$chrnum = $code[$i] . $code[$i+1];
+					$chrnum = $code[$i].$code[$i+1];
 					if (preg_match('/([0-9]{2})/', $chrnum) > 0) {
-						$code_data[] = (int)$chrnum;
+						$code_data[] = intval($chrnum);
 					} else {
 						return false;
 					}
@@ -1240,8 +1240,8 @@ class TCPDFBarcode {
 								$code_data[] = 99;
 							}
 							for ($i = 0; $i < $seq[2]; $i+=2) {
-								$chrnum = $seq[1][$i] . $seq[1][$i+1];
-								$code_data[] = (int)$chrnum;
+								$chrnum = $seq[1][$i].$seq[1][$i+1];
+								$code_data[] = intval($chrnum);
 							}
 							break;
 						}
@@ -1356,7 +1356,7 @@ class TCPDFBarcode {
 		if ($code_len == $data_len) {
 			// add check digit
 			$code .= $r;
-		} elseif ($r !== (int)$code[$data_len]) {
+		} elseif ($r !== intval($code[$data_len])) {
 			// wrong checkdigit
 			return false;
 		}
@@ -1472,7 +1472,7 @@ class TCPDFBarcode {
 			$seq .= '010101'; // right guard bar
 		} else {
 			$bararray = array('code' => $code, 'maxw' => 0, 'maxh' => 1, 'bcode' => array());
-			$half_len = (int)ceil($len / 2);
+			$half_len = intval(ceil($len / 2));
 			if ($len == 8) {
 				for ($i = 0; $i < $half_len; ++$i) {
 					$seq .= $codes['A'][$code[$i]];
@@ -1493,7 +1493,7 @@ class TCPDFBarcode {
 		$w = 0;
 		for ($i = 0; $i < $clen; ++$i) {
 			$w += 1;
-			if (($i == ($clen - 1)) OR (($i < ($clen - 1)) AND ($seq[$i] != $seq[($i+1)]))) {
+			if (($i == ($clen - 1)) OR (($i < ($clen - 1)) AND ($seq[$i] != $seq[$i+1]))) {
 				if ($seq[$i] == '1') {
 					$t = true; // bar
 				} else {
@@ -1629,7 +1629,7 @@ class TCPDFBarcode {
 		// calculate checksum
 		$sum = 0;
 		for ($i = 0; $i < $len; ++$i) {
-			$sum += (int)$code[$i];
+			$sum += intval($code[$i]);
 		}
 		$chkd = ($sum % 10);
 		if($chkd > 0) {
@@ -1900,7 +1900,7 @@ class TCPDFBarcode {
 			if ($digit == '-') {
 				$dval = 10;
 			} else {
-				$dval = (int)$digit;
+				$dval = intval($digit);
 			}
 			$check += ($dval * $p);
 			++$p;
@@ -1922,7 +1922,7 @@ class TCPDFBarcode {
 				if ($digit == '-') {
 					$dval = 10;
 				} else {
-					$dval = (int)$digit;
+					$dval = intval($digit);
 				}
 				$check += ($dval * $p);
 				++$p;
@@ -1965,7 +1965,7 @@ class TCPDFBarcode {
 	 */
 	protected function barcode_pharmacode($code) {
 		$seq = '';
-		$code = (int)$code;
+		$code = intval($code);
 		while ($code > 0) {
 			if (($code % 2) == 0) {
 				$seq .= '11100';
@@ -1991,7 +1991,7 @@ class TCPDFBarcode {
 	 */
 	protected function barcode_pharmacode2t($code) {
 		$seq = '';
-		$code = (int)$code;
+		$code = intval($code);
 		do {
 			switch ($code % 3) {
 				case 0: {
@@ -2327,7 +2327,7 @@ class TCPDFBarcode {
 		for ($count = 0; $count < 8192; ++$count) {
 			$bit_count = 0;
 			for ($bit_index = 0; $bit_index < 13; ++$bit_index) {
-				$bit_count += (int)(($count & (1 << $bit_index)) != 0);
+				$bit_count += intval(($count & (1 << $bit_index)) != 0);
 			}
 			// if we don't have the right number of bits on, go on to the next value
 			if ($bit_count == $n) {

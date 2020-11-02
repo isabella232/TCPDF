@@ -196,17 +196,17 @@ class TCPDF_FONTS {
 			preg_match('#/FontBBox[\s]*{([^}]*)#', $font, $matches);
 			$fmetric['bbox'] = trim($matches[1]);
 			$bv = explode(' ', $fmetric['bbox']);
-			$fmetric['Ascent'] = (int)$bv[3];
-			$fmetric['Descent'] = (int)$bv[1];
+			$fmetric['Ascent'] = intval($bv[3]);
+			$fmetric['Descent'] = intval($bv[1]);
 			preg_match('#/ItalicAngle[\s]*([0-9\+\-]*)#', $font, $matches);
-			$fmetric['italicAngle'] = (int)$matches[1];
+			$fmetric['italicAngle'] = intval($matches[1]);
 			if ($fmetric['italicAngle'] != 0) {
 				$fmetric['Flags'] |= 64;
 			}
 			preg_match('#/UnderlinePosition[\s]*([0-9\+\-]*)#', $font, $matches);
-			$fmetric['underlinePosition'] = (int)$matches[1];
+			$fmetric['underlinePosition'] = intval($matches[1]);
 			preg_match('#/UnderlineThickness[\s]*([0-9\+\-]*)#', $font, $matches);
-			$fmetric['underlineThickness'] = (int)$matches[1];
+			$fmetric['underlineThickness'] = intval($matches[1]);
 			preg_match('#/isFixedPitch[\s]*([^\s]*)#', $font, $matches);
 			if ($matches[1] == 'true') {
 				$fmetric['Flags'] |= 1;
@@ -235,20 +235,20 @@ class TCPDF_FONTS {
 				}
 			}
 			if (preg_match('#/StdVW[\s]*\[([^\]]*)#', $eplain, $matches) > 0) {
-				$fmetric['StemV'] = (int)$matches[1];
+				$fmetric['StemV'] = intval($matches[1]);
 			} else {
 				$fmetric['StemV'] = 70;
 			}
 			if (preg_match('#/StdHW[\s]*\[([^\]]*)#', $eplain, $matches) > 0) {
-				$fmetric['StemH'] = (int)$matches[1];
+				$fmetric['StemH'] = intval($matches[1]);
 			} else {
 				$fmetric['StemH'] = 30;
 			}
 			if (preg_match('#/BlueValues[\s]*\[([^\]]*)#', $eplain, $matches) > 0) {
 				$bv = explode(' ', $matches[1]);
 				if (count($bv) >= 6) {
-					$v1 = (int)$bv[2];
-					$v2 = (int)$bv[4];
+					$v1 = intval($bv[2]);
+					$v2 = intval($bv[4]);
 					if ($v1 <= $v2) {
 						$fmetric['XHeight'] = $v1;
 						$fmetric['CapHeight'] = $v2;
@@ -266,7 +266,7 @@ class TCPDF_FONTS {
 			}
 			// get the number of random bytes at the beginning of charstrings
 			if (preg_match('#/lenIV[\s]*([0-9]*)#', $eplain, $matches) > 0) {
-				$lenIV = (int)$matches[1];
+				$lenIV = intval($matches[1]);
 			} else {
 				$lenIV = 4;
 			}
@@ -1520,7 +1520,7 @@ class TCPDF_FONTS {
 	 * @public static
 	 */
 	public static function _getfontpath() {
-		if (!defined('K_PATH_FONTS') AND is_dir($fdir = realpath(__DIR__ .'/../fonts'))) {
+		if (!defined('K_PATH_FONTS') AND is_dir($fdir = realpath(dirname(__FILE__).'/../fonts'))) {
 			if (substr($fdir, -1) != '/') {
 				$fdir .= '/';
 			}
@@ -1664,7 +1664,7 @@ class TCPDF_FONTS {
 	 * @public static
 	 */
 	public static function unichr($c, $unicode=true) {
-	    $c = (int)$c;
+		$c = intval($c);
 		if (!$unicode) {
 			return chr($c);
 		} elseif ($c <= 0x7F) {
@@ -1928,7 +1928,7 @@ class TCPDF_FONTS {
 	 */
 	public static function getUniord($uch) {
 		if (function_exists('mb_convert_encoding')) {
-			[, $char] = @unpack('N', mb_convert_encoding($uch, 'UCS-4BE', 'UTF-8'));
+			list(, $char) = @unpack('N', mb_convert_encoding($uch, 'UCS-4BE', 'UTF-8'));
 			if ($char >= 0) {
 				return $char;
 			}
